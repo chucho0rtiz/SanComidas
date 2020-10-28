@@ -46,9 +46,9 @@ var locales = [{
         "modal":"En_la_salida_picnic",
         "modalCarousel":"En_la_salida_picnic_Carousel",
         "Menu": [
-            "images/menu/EnLaSalidaPicnic/EnLaSalidaPicnic_2.jpeg",
-            "images/menu/EnLaSalidaPicnic/EnLaSalidaPicnic_3.jpeg",
-            "images/menu/Frulatto/EnLaSalidaPicnic_Inf.jpeg",
+            "images/menu/EnLaSalidaPicnic/Salida_Picnic_2.jpeg",
+            "images/menu/EnLaSalidaPicnic/Salida_Picnic_3.jpeg",
+            "images/menu/EnLaSalidaPicnic/Salida_Picnic_Inf.jpeg",
         ]
     }, {
         "nombre": "La baguette",
@@ -62,7 +62,10 @@ var locales = [{
         "modal":"La_baguette",
         "modalCarousel":"La_baguette_Carousel",
         "Menu": [
-            "images/menu/EnLaSalidaPicnic/EnLaSalidaPicnic_2.jpeg",
+            "images/menu/La_baguette/La_baguette_1.jpeg",
+            "images/menu/La_baguette/La_baguette_2.jpeg",
+            "images/menu/La_baguette/La_baguette_3.jpeg",
+            "images/menu/La_baguette/La_baguette_4.jpeg",
         ]        
     }, {
         "nombre": "Pizzachos",
@@ -294,7 +297,8 @@ locales.forEach(e => {
             <div class="card-body">
                 <h5 class="card-title">${e.nombre}</h5>
                 <p class="card-text">${e.direccion} ${e.telefono}</p>
-                <button type="button" class="btn btn-dark shadow" data-toggle="modal" data-target="${'#'+e.modal}">
+                <button type="button" class="btn btn-dark shadow" data-toggle="modal" data-target="${'#'+e.modal}" 
+                >
                     Ver menu de <span style="color: #FF9900">${e.nombre}</span>
                 </button>
 
@@ -322,7 +326,7 @@ locales.forEach(e => {
                                         height: 400px;
                                         background-size: cover;
                                     }
-                                    #avanzar, #retroceder{
+                                    .avanzar, .retroceder{
                                         margin-top: 50%;
                                         border-radius: 25px 25px;
                                         color: #ffffff;
@@ -332,9 +336,9 @@ locales.forEach(e => {
                                     }
                                 </style>
                                 <div class="carousel">
-                                    <button id="retroceder">Retroceder</button>
-                                    <div id=${e.modalCarousel}></div>
-                                    <button id="avanzar">Avanzar</button>
+                                    <button id="${"retroceder"+e.modalCarousel}" class="retroceder">Retroceder</button>
+                                    <div id="${e.modalCarousel}"></div>
+                                    <button id="${"avanzar"+e.modalCarousel}" class="avanzar">Avanzar</button>
                                 </div>
                             </div>
                             <!-- FIN MENU -->
@@ -352,12 +356,13 @@ locales.forEach(e => {
 });
 
 window.onload = function () {
+    console.log("MENU: ");
     // Variables
-    
-    let posicionActual = 0;
-    let $botonRetroceder = document.querySelector('#retroceder');
-    let $botonAvanzar = document.querySelector('#avanzar');
     locales.forEach(e => {
+        let posicionActual = 0;
+        let $botonRetroceder = document.querySelector('#retroceder'+e.modalCarousel);
+        let $botonAvanzar = document.querySelector('#avanzar'+e.modalCarousel);
+        console.log("entre");
         let $imagen = document.querySelector('#'+e.modalCarousel);
     
         /**
@@ -369,6 +374,9 @@ window.onload = function () {
             } else {
                 posicionActual++;
             }
+            $j(`${'#'+e.modalCarousel+(posicionActual==0?posicionActual+e.Menu.length-1:posicionActual-1)}`).remove();
+            console.log("quitar: "+e.modalCarousel+(posicionActual==0?posicionActual+e.Menu.length-1:posicionActual-1));
+            console.log("posicionActual1: "+posicionActual);
             renderizarImagen();
         }
     
@@ -381,6 +389,10 @@ window.onload = function () {
             } else {
                 posicionActual--;
             }
+
+            $j(`${'#'+e.modalCarousel+(posicionActual==e.Menu.length-1?posicionActual-(e.Menu.length-1):posicionActual+1)}`).remove();
+            console.log("poner: "+e.modalCarousel+(posicionActual==e.Menu.length-1?posicionActual-(e.Menu.length-1):(e.Menu.length-1)-1));
+            console.log("posicionActual2: "+posicionActual);
             renderizarImagen();
         }
     
@@ -388,7 +400,10 @@ window.onload = function () {
          * Funcion que actualiza la imagen de imagen dependiendo de posicionActual
          */
         function renderizarImagen () {
-            $imagen.style.backgroundImage = `url(${e.Menu[posicionActual]})`;
+            console.log('posicionActual3: '+posicionActual);
+            $j(`${'#'+e.modalCarousel}`).append(`
+                <img src="${e.Menu[posicionActual]}" id="${e.modalCarousel+posicionActual}" style="width: 65%; height: 100%; display:block; margin:auto;" alt="...">
+            `);
         }
     
         // Eventos
