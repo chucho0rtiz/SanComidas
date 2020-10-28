@@ -360,8 +360,6 @@ window.onload = function () {
     locales.forEach(e => {
         let $imagen = document.querySelector('#'+e.modalCarousel);
     
-        // Funciones
-    
         /**
          * Funcion que cambia la foto en la siguiente posicion
          */
